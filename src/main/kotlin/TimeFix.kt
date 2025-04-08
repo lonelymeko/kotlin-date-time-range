@@ -11,9 +11,9 @@ data class LocalDateTimeRange(
     override val endInclusive: LocalDateTime
 ) : ClosedRange<LocalDateTime>, Iterable<LocalDateTime> {
 
-    fun LocalDateTime.plus(duration: Duration, timeZone: TimeZone): LocalDateTime {
+    fun LocalDateTime.plus(duration: Duration): LocalDateTime {
         // 将 LocalDateTime 转换为 Instant（需要指定时区）
-        val instant = this.toInstant(timeZone)
+        val instant = this.toInstant(TimeZone.currentSystemDefault())
         // 对 Instant 添加时间间隔
         val newInstant = instant.plus(duration)
         // 转换回 LocalDateTime（需要指定同一时区）
@@ -69,7 +69,7 @@ data class LocalDateTimeProgression(
         override fun next(): LocalDateTime {
             if (!hasNext()) throw NoSuchElementException()
             val nextValue = current
-            current = current.plus(stepDuration, TimeZone.currentSystemDefault())
+            current += stepDuration
             return nextValue
         }
     }
